@@ -296,6 +296,7 @@ export function LabDashboard({ labId, onBack }: LabDashboardProps) {
         labId={labId}
         labName={lab.name}
         onBack={() => setCurrentView('dashboard')}
+        isAdmin={isAdmin}
       />
     )
   }

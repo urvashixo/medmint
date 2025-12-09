@@ -65,24 +65,7 @@ export function SidebarLeft({
             Generate Report
           </button>
 
-          {/* ADME Profile Button */}
-          <button
-            onClick={onADMEProfile}
-            className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
-          >
-            <Activity className="w-5 h-5" />
-            ADME Profile
-          </button>
-
-          {/* Target Predictor Button */}
-          <button
-            onClick={onTargetPredictor}
-            className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"
-          >
-            <Target className="w-5 h-5" />
-            Target Predictor
-          </button>
-
+        
           {/* Info Section */}
           <div className="mt-8 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
             <h3 className="text-blue-300 font-medium mb-2">AI Research Assistant</h3>

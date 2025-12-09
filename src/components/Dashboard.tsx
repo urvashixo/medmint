@@ -170,15 +170,17 @@ export function Dashboard() {
   if (selectedLabId) {
     return <LabDashboard labId={selectedLabId} onBack={handleBackToDashboard} />
   }
-
   // Show reports page if a reports lab is selected
   if (selectedReportsLabId) {
     const selectedLab = labs.find(lab => lab.id === selectedReportsLabId)
+    // Check if user is owner of the lab (for admin permissions)
+    const isAdmin = selectedLab?.owner_id === user?.id
     return (
       <ReportsPage
         labId={selectedReportsLabId}
         labName={selectedLab?.name || 'Lab'}
         onBack={handleBackToDashboard}
+        isAdmin={isAdmin}
       />
     )
   }

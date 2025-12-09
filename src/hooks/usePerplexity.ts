@@ -17,113 +17,129 @@ export function usePerplexity() {
   const [isPerplexityLoading, setIsPerplexityLoading] = useState(false)
 
   const sendToPerplexity = async (
-    message: string, 
-    context: ChatContext[] = [], 
+    message: string,
+    context: ChatContext[] = [],
     toolData?: any
   ): Promise<PerplexityResponse> => {
+
     setIsPerplexityLoading(true)
-    
+
     try {
-      // Prepare the prompt with context
-      let prompt = message
-      
+      // Build user prompt
+      let userPrompt = message
+
       if (toolData) {
-        prompt += `\n\nTool Data: ${JSON.stringify(toolData, null, 2)}`
-        prompt += '\n\nPlease analyze this data and provide insights about its biological relevance.'
+        userPrompt += `\n\nTool Data: ${JSON.stringify(toolData, null, 2)}`
+        userPrompt += '\n\nPlease analyze this data and provide biological insights.'
       }
 
-      // Add context if available
       if (context.length > 0) {
-        const contextString = context
-          .slice(-10) // Keep last 10 messages for context
-          .map(ctx => `${ctx.role}: ${ctx.content}`)
+        const ctx = context
+          .slice(-10)
+          .map(c => `${c.role}: ${c.content}`)
           .join('\n')
-        
-        prompt = `Previous conversation:\n${contextString}\n\nCurrent message: ${prompt}`
+
+        userPrompt = `Previous conversation:\n${ctx}\n\nCurrent message: ${userPrompt}`
       }
 
-      // Add the specific JSON format instruction
-      const systemPrompt = `${prompt}
+      // SYSTEM INSTRUCTIONS — MUST ALWAYS BE SYSTEM ROLE
+      const systemPrompt = `
+You are Neo, an AI assistant for MedMint.
 
-Respond only in JSON format with the following structure:
+Respond ONLY in the following strict JSON format:
 
 {
-"output": "answer to user's query",
-"citations": ["<URL1>", "<URL2>", "..."]
+  "output": "<your answer>",
+  "citations": ["<url1>", "<url2>"]
 }
 
-Do not include any additional commentary or text outside the JSON.
+RULES:
+- NEVER use markdown.
+- NEVER wrap in \`\`\`json.
+- NEVER add text before or after the JSON.
+- "output" must be a concise biological explanation.
+- "citations" must be direct URLs from PDB, PubMed, UniProt, EBI, etc.
+- If asked about any PDB ID, first identify the protein name, then answer.
+- PDB 2QWO is linked to pancreatic cancer because DNAJA1 acts as a co-chaperone for DnaK.
+      `.trim()
 
-Your Name Is Neo And You Are an AI at MedMint, Only Mention If Asked
-
-if you are asked anything in context to a pdb id then just find the name of the id and then find answer to the question asked
-
-"output" should be a concise paragraph summarizing the biological relevance.
-
-"citations" must be url to credible sources (like PDB, PubMed, EBI, etc.)`
-      
+      // API CALL
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${API_KEY}`,
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'sonar-pro',
+          model: "sonar-pro",
           messages: [
-            {
-              role: 'user',
-              content: systemPrompt
-            }
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt }
           ],
-          max_tokens: 1000,
+          max_tokens: 1200,
           temperature: 0.2,
           top_p: 0.9,
-          return_citations: true,
-          return_images: false,
-          return_related_questions: false,
-          search_recency_filter: "month",
-          top_k: 0,
-          stream: false,
-          presence_penalty: 0,
-          frequency_penalty: 1
+          return_citations: false, // We want citations ONLY inside JSON
+          stream: false
         })
       })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error(`HTTP error! Status: ${response.status}`)
       }
 
       const data = await response.json()
-      const content = data.choices[0]?.message?.content || ''
+      const rawContent = data.choices?.[0]?.message?.content || ""
 
-      // Try to parse JSON response
+      // -------------------------------------------------
+      // CLEAN JSON — extract from fenced code block if needed
+      // -------------------------------------------------
+      let cleaned = rawContent.trim()
+
+      // Example Perplexity output:
+      // ```json
+      // { "output": "...", "citations": [] }
+      // ```
+      const fencedMatch = cleaned.match(/```json\s*([\s\S]*?)```/i)
+      if (fencedMatch) {
+        cleaned = fencedMatch[1].trim()
+      }
+
+      // Remove stray backticks if any
+      cleaned = cleaned.replace(/^```|```$/g, "").trim()
+
+      // -------------------------------------------------
+      // Try parsing final cleaned JSON
+      // -------------------------------------------------
       try {
-        const jsonResponse = JSON.parse(content)
+        const parsed = JSON.parse(cleaned)
         return {
-          output: jsonResponse.output || content,
-          citations: jsonResponse.citations || []
+          output: parsed.output ?? cleaned,
+          citations: parsed.citations ?? []
         }
-      } catch (parseError) {
-        // If JSON parsing fails, return content as output
+      } catch (err) {
+        console.warn("❌ Failed to parse JSON. Raw content:", cleaned)
         return {
-          output: content,
+          output: cleaned,
           citations: []
         }
       }
 
-    } catch (error) {
-      console.error('Perplexity API error:', error)
-      if (error.message?.includes('API key') || error.message?.includes('401')) {
+    } catch (error: any) {
+      console.error("Perplexity API error:", error)
+
+      if (error.message?.includes("401") || error.message?.includes("API key")) {
         return {
-          output: 'There Is An Issue With API key to use the AI assistant.',
+          output: "There is an issue with the API key.",
           citations: []
         }
       }
+
       return {
-        output: 'Sorry, I encountered an error processing your request. Please try again.',
+        output: "Sorry, I encountered an error. Please try again.",
         citations: []
       }
+
     } finally {
       setIsPerplexityLoading(false)
     }
