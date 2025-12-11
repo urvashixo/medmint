@@ -2,93 +2,441 @@
 
 ### Note- Setup research suite separately, and run it separately!!! use its endpoints in the research directory of this folder
 
-It started with a question we couldn’t shake off:
-“What if the drug that could save someone’s life hasn’t been discovered yet, not because it’s impossible, but because the right compound was never guessed correctly by hit and trial, the right target was never predicted, or the compound never passed clinical trials?”
+## Inspiration
 
-We spoke to my uncle, who is chief radiologist at Apollo, one of the best hospital chains in India, from students in academia & to scientists in early-stage biotech — and all echoed the same struggle:
-The science was there. The ideas were bold. But the process? Painfully slow and high error rates.
+**The Problem**: 4,000 diseases have zero FDA-approved treatments. 10 million people die annually from R&D-uncovered diseases. Drug discovery takes 10–15 years, costs $2.6B+, and succeeds only ~12% of the time. Meanwhile, drug monopolies keep life-saving treatments out of reach for patients who need them most.
 
-**Behind every stalled experiment is a family, a person, someone's parents, someone's children waiting hopefully a cure would be there for them. Slow research doesn’t just delay science — it delays hope. Families uproot their lives chasing second opinions, while potential breakthroughs sit trapped in outdated systems and scattered workflows.**
+**The Insight**: AI can generate drug candidates in hours, but most are chemically invalid or fail ADME checks. Worse, when researchers do find something promising, it gets locked in closed silos or owned by large pharma, keeping small labs and independent researchers powerless.
 
-In India, families waiting for enzyme replacement therapy for rare genetic disorders have faced months-long delays, even after funding was approved and in at least 10 tragic cases, children died before treatment could begin [source](https://www.theippress.com/2024/10/13/justice-for-the-rare-unraveling-delays-access-and-the-fight-for-life-saving-drugs-in-india/)
-
-#How MedMint Solve This Major Issue
-MedMint stands for - Medicinal & Molecular Intelligence Toolkit
-
-In a sea of quick answers and chatbots, MedMint chose the hard path: tackling one of the most complex, expensive, and uncertain stages in healthcare: early-stage drug discovery.
-
-We didn’t just build a demo. We built an AI-powered pipeline that takes you from a disease target to real medicinal compound generation and explainable evaluation, all in one platform. Using models like TamGen, chemBERTa, and DeepPurpose, we made scientific discovery searchable, explainable, and actionable.
-
-**This isn’t just about tech — it’s about saving years of research, millions in cost, and potentially giving hope to patients who currently have no cure.**
-
-MedMint is a seamless research and collaboration suite designed to accelerate early-stage drug discovery.
-
-It helps researchers generate medicinal compounds, predict targets, analyze binding affinities, decode protein sequences, and visualize molecular structures in 3D, all in one unified workspace,  offering real-time chat, collaborative whiteboards, shared task systems, and a lab-wide report repository. It ensures that researchers, no matter where they are, can work as if they’re side by side.
-
-MedMint streamlines the most resource-heavy and uncertain stages of early drug discovery — from identifying a viable target to generating and evaluating candidate compounds. This drastically reduces time, cost, and cognitive overhead for researchers, bridging gaps between silos and boosting the chances of clinical success.
-
+**Our Vision**: What if we could compress years of discovery into weeks, validate every compound rigorously, and register breakthroughs as protected IP on-chain so small pharma and researchers could safely collaborate, keep ownership, and break the monopoly? That's MedMint.
 ## What it does
-Drug discovery takes around 10-15 years [Source: DiMasi, J. A., Grabowski, H. G., & Hansen, R. W. (2016). Innovation in the pharmaceutical industry: New estimates of R&D costs. Journal of Health Economics, 47, 20–33.] MedMint accelerates drug discovery by unifying the entire pipeline — from molecule creation to deep biological insight — into a single, intuitive system. It’s not just faster — it’s smarter, more connected, and built for the urgency of real-world healthcare, saving 3-5 years of development time and plans to save more in future iterations
+MedMint is an AI‑powered breakthrough engine that compresses early drug discovery from 4–5 years to 4–8 weeks.
 
-At the core of medicinal compound generation is TamGen, a cutting-edge generative AI model trained on over 120 million bioactive molecules. Unlike traditional methods, TamGen generates target-specific, synthesizable compounds — and has already produced novel molecules that demonstrated strong biological activity in real-world validations [Source: nature article](https://www.nature.com/articles/s41467-024-53632-4). In a research on TamGe, TamGen predicted and identified novel compounds that act as inhibitors of the ClpP protease from Mycobacterium tuberculosis, the bacterium responsible for tuberculosis (TB), the identified compounds include novel scaffolds such as benzenesulfonamide and diphenylurea groups, which differ significantly from existing TB protease inhibitors like Bortezomib, potentially offering improved bioavailability and molecular stability.
+ - **Compound generation** : Uses TamGen (chemical language model trained on 120M+ compounds) to generate drug candidates for any disease, including rare and neglected ones.
 
-By combining this with built-in ADME profiling, binding affinity prediction, and explainable AI tools, MedMint helps researchers prioritize compounds with true therapeutic potential — cutting 3–5 years from the timeline and millions of dollars without compromising scientific rigor & and hopefully making medicines cheaper
+- **Rigorous validation** : Filters candidates with RDKit structural checks, ADME/ADMET profiling, and binding‑affinity prediction so every shortlist is scientifically defensible and patent‑ready.
 
-[Link To MedMint Presentation](https://www.canva.com/design/DAGrw_xpBVk/W7Z_QLLCTwrU5w66jy1HsQ/view?utm_content=DAGrw_xpBVk&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h1a34c55d90)
+- **Unified workspace** : A browser‑based platform for molecular design, binding prediction, sequence decoding, structure visualization, chat, whiteboards, shared reports, and task management.
 
-## Tech We Used
-- Supabase (For Database, Edge Functions, Triggers, Storage Bucket, RLS Policies, Broadcast, Auth, Email Confirmation Of Auth)
+- **On‑chain IP registration** : Every MedMint report is registered as a verifiable IP asset on Story with clear licensing, provenance, and optional royalty tracking.
 
-- Entri (For Domain & Domain Management)
+- **Fair IP layer** : Small pharma and independent researchers can prove priority, license discoveries fairly with automated royalty splits, and partner with big pharma without losing control or credit.
 
-- Netlify for deployment
+**Impact** : Labs can explore thousands of molecules overnight, get back a rigorous shortlist, and have that work protected and shareable—accelerating and democratizing drug development.
 
-At the heart of MedMint it is built on Bolt, which served as the foundation for our entire platform — powering real-time collaboration, user management, task systems, and secure lab environments. Every core interaction — from report sharing to whiteboard syncing and team messaging — runs on Bolt’s robust infrastructure, enabling fast, secure, and scalable performance right out of the box. To extend Bolt’s capabilities into advanced drug discovery, we integrated specialized AI-powered microservice, These microservices were modularly deployed on google cloud and seamlessly connected via Bolt, making our system not just powerful, but incredibly flexible. Bolt helped us create an event-driven architecture allowed us to orchestrate tasks between collaborative lab tools and scientific engines — ensuring everything from a generated molecule to its ADME profile was tied back into the research flow in real time. Bolt’s flexibility let us route data, trigger events, and deliver responses inside the collaborative lab flow, without breaking a sweat.
+## How we built it
+Frontend: React + Next.js for a responsive, real‑time collaborative UI.
 
-If MedMint is the lab of the future, then **Bolt is the electricity that powers every single experiment**.
+Backend: Python‑based services orchestrating AI models and compound pipelines.
+
+AI/ML engine:
+
+TamGen for molecular generation.
+
+RDKit for structural validation and property calculation.
+
+ADME/ADMET models (SwissADME, DeepPurpose) for drug‑likeness profiling.
+
+Binding‑affinity predictors (PDBbind‑trained, Autodock‑Vina) for target validation.
+
+Neo‑style assistant for citation‑backed insights.
+
+Data layer: Supabase for auth, Postgres for reports/metadata, ArangoDB for vector embeddings and similarity search.
+
+Web3/IP layer: Story SDK for registering IP assets, selecting PIL license templates, and wiring in royalty policies.
+
+Deployment: Serverless cloud (e.g., Cloud Run/Lambda) for automatic scaling.
+
+Target or disease → CLM generates candidates → RDKit + ADME filters → binding‑affinity ranking → structured report → one‑click on‑chain IP registration with selected license → optional royalty and partner‑sharing flows.
+
+# MedMint - Decentralized Medical Research Platform
+
+A modern medical research collaboration platform with **Story Protocol** integration for intellectual property (IP) management, licensing, and royalty distribution on the blockchain.
+
+![Story Protocol](https://img.shields.io/badge/Story%20Protocol-Aeneid%20Testnet-purple)
+![React](https://img.shields.io/badge/React-18.3-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
+![Vite](https://img.shields.io/badge/Vite-5.4-yellow)
+
+## Quick Start
+
+### Prerequisites
+
+- **Node.js** 18+ 
+- **npm** or **yarn**
+- **MetaMask** or compatible Web3 wallet
+- **Story Protocol Aeneid testnet** configured in wallet
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd baitmint
+
+# Install dependencies
+npm install
+
+# Create environment file
+cp .env.example .env
+```
+
+### Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# Supabase Configuration
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Pinata IPFS (for metadata storage)
+VITE_PINATA_JWT=your_pinata_jwt_token
+
+# WalletConnect Project ID (optional)
+VITE_WALLETCONNECT_PROJECT_ID=your_walletconnect_project_id
+```
+
+### Running the App
+
+```bash
+# Development mode
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+The app will be available at `http://localhost:5173`
+
+---
+
+## Story Protocol Integration
+
+MedMint integrates with **Story Protocol** on the **Aeneid Testnet** to provide decentralized IP management for medical research documents.
+
+### Network Configuration
+
+| Property | Value |
+|----------|-------|
+| **Network** | Story Aeneid Testnet |
+| **Chain ID** | 1315 |
+| **RPC URL** | https://aeneid.storyrpc.io |
+| **Explorer** | https://aeneid.storyscan.xyz |
+| **Currency** | $IP |
+
+### Contract Addresses (Aeneid Testnet)
+
+| Contract | Address |
+|----------|---------|
+| **SPG NFT Contract** | `0xc32A8a0FF3beDDDa58393d022aF433e78739FAbc` |
+| **WIP Token** | `0x1514000000000000000000000000000000000000` |
+| **Royalty Policy LAP** | `0xBe54FB168b3c982b7AaE60dB6CF75Bd8447b390E` |
+
+---
+
+## Story Protocol SDK Features Used
+
+### 1. **StoryClient Initialization**
+```typescript
+import { StoryClient, StoryConfig } from '@story-protocol/core-sdk'
+
+const config: StoryConfig = {
+  account: walletClient.account,
+  transport: custom(walletClient.transport),
+  chainId: 'aeneid',
+}
+const client = StoryClient.newClient(config)
+```
+
+### 2. **IP Asset Registration** (`client.ipAsset.registerIpAsset`)
+
+Registers research reports as IP Assets on Story Protocol with metadata stored on IPFS.
+
+**Features:**
+- Mints an SPG NFT representing the IP
+- Uploads metadata to IPFS via Pinata
+- Attaches license terms during registration
+- Computes SHA-256 hash of metadata for verification
+
+```typescript
+const response = await client.ipAsset.registerIpAsset({
+  nft: {
+    type: 'mint',
+    spgNftContract: SPG_NFT_CONTRACT,
+  },
+  ipMetadata: {
+    ipMetadataURI,
+    ipMetadataHash,
+    nftMetadataURI,
+    nftMetadataHash,
+  },
+  licenseTermsData: [...], // Optional license terms
+})
+```
+
+also in .env file add these 
+```
+VITE_SUPABASE_URL=https://
+VITE_SUPABASE_ANON_KEY= Anon Key Here
+VITE_PERPLEXITY_KEY = Sonar API Key Here
+VITE_PINATA_API_SECRET=
+VITE_PINATA_API_KEY=
+VITE_PINATA_JWT=
+```
+### 3. **License Terms Configuration**
+
+MedMint supports three license types with Programmable IP License (PIL) terms:
+
+| License Type | Commercial Use | Derivatives | Minting Fee | Rev Share |
+|--------------|---------------|-------------|-------------|-----------|
+| **Open Research** | ❌ No | ✅ Yes | Free | 0% |
+| **Commercial** | ✅ Yes | ❌ No | 1 $IP | 0% |
+| **Commercial Remix** | ✅ Yes | ✅ Yes | 0.5 $IP | 5% |
+
+**PIL Terms Structure:**
+```typescript
+{
+  transferable: true,
+  royaltyPolicy: ROYALTY_POLICY_LAP,
+  defaultMintingFee: parseEther('1'), // 1 $IP
+  commercialUse: true,
+  commercialAttribution: true,
+  derivativesAllowed: false,
+  currency: WIP_TOKEN_ADDRESS,
+  // ... more terms
+}
+```
+
+### 4. **License Token Minting** (`client.license.mintLicenseTokens`)
+
+Allows others to mint license tokens to use the IP. Minting fee goes to the IP's royalty vault.
+
+```typescript
+const response = await client.license.mintLicenseTokens({
+  licenseTermsId: '1',
+  licensorIpId: ipId,
+  receiver: receiverAddress,
+  amount: 1,
+})
+```
+
+### 5. **Royalty Management**
+
+#### Get Royalty Vault Address (`client.royalty.getRoyaltyVaultAddress`)
+```typescript
+const vaultAddress = await client.royalty.getRoyaltyVaultAddress(ipId)
+```
+
+#### Check Claimable Revenue (`client.royalty.claimableRevenue`)
+```typescript
+const claimable = await client.royalty.claimableRevenue({
+  ipId: ipId,
+  claimer: address,
+  token: WIP_TOKEN_ADDRESS,
+})
+```
+
+#### Claim All Revenue (`client.royalty.claimAllRevenue`)
+```typescript
+const response = await client.royalty.claimAllRevenue({
+  ancestorIpId: ipId,
+  claimer: address,
+  childIpIds: [],
+  royaltyPolicies: [ROYALTY_POLICY_LAP],
+  currencyTokens: [WIP_TOKEN_ADDRESS],
+})
+```
+
+### 6. **Vault Snapshot** (Direct Contract Call)
+
+For funds that haven't been snapshotted yet, we call the vault's `snapshot()` function directly:
+
+```typescript
+const snapshotTxHash = await walletClient.writeContract({
+  address: vaultAddress,
+  abi: [{ name: 'snapshot', type: 'function', ... }],
+  functionName: 'snapshot',
+})
+```
+
+---
+
+## Architecture
+
+### Core Components
+
+```
+src/
+├── hooks/
+│   └── useStoryProtocol.ts    # Story Protocol integration hook
+├── components/
+│   ├── ReportsPage.tsx        # Reports management with IP features
+│   ├── RoyaltyPanel.tsx       # Royalty viewing and claiming UI
+│   └── Web3Provider.tsx       # Wagmi/Web3 provider setup
+└── lib/
+    └── web3.ts                # Web3 configuration
+```
+
+### Hook: `useStoryProtocol`
+
+The main hook exports the following functions:
+
+| Function | Description |
+|----------|-------------|
+| `registerIP(metadata)` | Register a report as IP with optional license terms |
+| `mintLicenseToken(ipId, termsId, receiver, amount)` | Mint license tokens for an IP |
+| `getRoyaltyInfo(ipId)` | Get vault balance, claimable amount, and royalty details |
+| `claimRoyalties(ipId)` | Claim available royalties |
+| `snapshotAndClaim(ipId)` | Snapshot vault and claim funds |
+| `getVaultBalance(ipId)` | Debug function to check vault vs claimable |
+
+### Exported Types
+
+```typescript
+export type LicenseType = 'none' | 'open' | 'commercial' | 'commercial-remix'
+
+export interface RoyaltyInfo {
+  ipId: string
+  claimableAmount: string
+  vaultBalance: string
+  unsnapshotedAmount: string
+  hasUnsnapshotedFunds: boolean
+  royaltyVaultAddress?: string
+  // ...
+}
+
+export interface RegisterIPResult {
+  txHash: string
+  ipId: string
+  tokenId: string
+  licenseTermsId?: string
+}
+```
+
+---
+
+## Permission-Based Access
+
+MedMint implements role-based access control for Story Protocol features:
+
+| Action | Lab Admin/Owner | Lab Member |
+|--------|-----------------|------------|
+| Connect Wallet | ✅ | ✅ |
+| View Reports | ✅ | ✅ |
+| Register as IP | ✅ | ❌ |
+| Share IP (Mint License) | ✅ | ✅ |
+| View Royalties | ✅ | ❌ |
+| Claim Royalties | ✅ | ❌ |
+
+---
+
+## User Flows
+
+### 1. Register Research as IP
+
+1. Navigate to **Reports** page
+2. Click on a report to view details
+3. Click **"Register as IP"** (admin only)
+4. Select license type:
+   - No License
+   - Open Research (Non-Commercial)
+   - Commercial Use (1 $IP minting fee)
+   - Commercial Remix (0.5 $IP + 5% rev share)
+5. Confirm transaction in wallet
+6. View IP on Story Explorer
+
+### 2. Share IP / Mint License
+
+1. Click **"Share IP (Mint License)"** on a registered report
+2. Enter recipient wallet address
+3. Confirm transaction (recipient pays minting fee)
+4. License token is minted to recipient
+
+### 3. Claim Royalties
+
+1. Click **"View Royalties"** on a registered report (admin only)
+2. View vault balance and claimable amount
+3. If funds are unsnapshotted, click **"Snapshot & Claim"**
+4. Otherwise, click **"Claim"**
+5. Royalties are transferred to your wallet
+
+---
+
+## Tech Stack
+
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS
+- **Web3**: wagmi, viem
+- **Story Protocol**: @story-protocol/core-sdk v1.4.2
+- **Storage**: IPFS (via Pinata), Supabase
+- **Icons**: Lucide React
+
+---
+
+## License
+
+MIT License
+
+---
+
+## Resources
+
+- [Story Protocol Documentation](https://docs.story.foundation/)
+- [Story Protocol SDK](https://github.com/storyprotocol/sdk)
+- [Aeneid Testnet Explorer](https://aeneid.explorer.story.foundation/)
+- [Aeneid Faucet](https://faucet.story.foundation/)
+
 
 ## Challenges we ran into
-Building MedMint in under a month meant pushing every tool to its limits — and sometimes beyond
 
-Bolt.new’s project size limits: As our application scaled and the features grew, we hit Bolt’s project size limits. We had to optimize data handling and offload some large state interactions to external stores.
+Speed vs accuracy: Generating thousands of molecules is easy; returning a high‑quality shortlist fast is hard. Multi‑stage filtering, GPU batching, and caching kept latency low without sacrificing rigor.
 
-Prompt engineering: While integrating AI for research queries and compound generation, we realized how critical prompt design is. It took iterative tuning to ensure domain-specific queries returned accurate, trustworthy, and citable responses.
+Complex IP plumbing, simple UX: Story’s licensing and royalty modules are powerful but complex. MedMint hides that behind clear license presets and human‑readable summaries.
 
-Desync between Bolt and server state: During late-night sprints, we built some of our most innovative features — only to find they had disappeared the next day. Turns out, syncing issues between Bolt’s editor and server state led to features vanishing silently, without persistent saves. We had to fork from our last stable backup and reimplement them from scratch, losing precious hours but gaining hard-earned lessons on state durability and backup hygiene.
+Noisy biological data: ADME datasets are incomplete and inconsistent. Cross‑model validation and similarity‑based sanity checks improved reliability.
 
-Supabase Realtime: We were using supabase realtime for real time chat messages but we wondered why it was not working, turns out that feature is not available publically to everyone yet
+Real‑time collaboration: Keeping chats, whiteboards, and reports in sync under load required careful state management and conflict‑free data structures.
+
+Provenance mapping: Ensuring every report version links correctly to its on‑chain IP asset meant designing explicit versioning and transaction tracking.
 
 ## Accomplishments that we're proud of
-MedMint is a crown full of jewels, the platform itself is a very proud thing to have built, but the things we are the most proud of are-
+100x faster early discovery: From target to vetted shortlist in minutes to hours instead of months to years.
 
-Designed a platform with real-world impact: something that could save researchers years and bring patients hope sooner — and got early validation from medical professionals and domain experts.
+Scientifically grounded results: Shortlists validated against peer‑reviewed ADME and binding‑affinity models, not just black‑box scores.
 
-Enabled real-time collaboration — shared whiteboards, chat, task tracking, and a shared report repository — all functioning like a digital research lab.
+IP that actually works for the little guy: Small labs can now register discoveries, set licenses, and negotiate fairly with big pharma.
 
-Integrated advanced drug discovery tools (compound generation, target prediction, ADME profiling, amino acid decoding, binding affinity) as modular microservices — and made them feel like one connected platform.
+One workspace, many tools replaced: MedMint subsumes docking tools, drawing tools, spreadsheets, and chat into a single coordinated environment.
 
-Built a full-stack research suite from scratch in under a month— with AI, real-time collaboration, molecular visualization, and report generation all working together seamlessly.
-
-Used TamGen to generate target-aware compounds with drug-like properties, backed by real scientific research and explainable outputs.
-
-And new users signing up already
+Real‑world validation: Early feedback and interest from pharma researchers and analysts who stress‑tested the outputs and found them credible.
 
 ## What we learned
 
-AI can’t replace researchers — but it can empower them. We learned that true innovation comes when AI is used to assist, not replace. MedMint isn't about automating science, but about giving researchers superpowers: faster insights, stronger predictions, and less time lost on the wrong leads.
+Owning IP changes behavior: When small teams know their work is provably theirs, they are more willing to share, collaborate, and publish intermediate results.
 
-AI alone isn’t enough. Even powerful models like TamGen need careful inputs, validation, and scientific interpretation. We gained a deep respect for the balance between computation and context.
+Trust beats pure speed: Scientists accept a slightly slower model if they understand the validation pipeline and can cite underlying literature.
 
-Tools can break — backups shouldn’t. Our Bolt desync taught us to expect the unexpected. Having fallback systems and version control saved our project (and our sanity).
+Rare diseases need better tools: The biggest excitement came from teams working on conditions big pharma often ignores.
 
-Drug discovery is more than code. It’s about understanding human urgency, regulatory reality, and the daily friction researchers face. Talking to real scientists gave us clarity on what actually matters.
+UX for Web3 must feel Web2: Hiding wallets, gas, and protocol jargon behind clean flows is essential for adoption in life sciences.
 
-The future of science is collaborative. What we’re building is not just a research suite — it’s a space where people can come together and make discoveries that no one could make alone.
+Collaboration is a feature, not a nice‑to‑have: Shared context (chat + whiteboards + reports) is as important as the model itself.
 
 ## What's next for MedMint
 
-A future where researchers can join public or private labs, access datasets, contribute models, and share reports — building a living ecosystem of scientific progress.
+Royalty and revenue dashboards: Show labs what they can claim and what flows from licensed or derivative use of their IP.
 
-Tighter integration with tools like ElevenLabs (for voice), AlphaFold (for structure), and public compound databases to push MedMint from a discovery engine to a decision-making ally in preclinical development.
+Partner licensing flows: One‑click “share this discovery with partner X” via license tokens and templated agreements.
+
+More powerful AI agents: Autonomous workflows that iteratively generate, filter, and optimize compounds for specific constraints.
+
+Wet‑lab integration: Connect in‑silico runs with lab automation and sensor data for closed‑loop optimization.
+
+Discovery DAO and marketplace: Pool results from many labs under shared governance and let anyone license data, models, or validated hits—reducing monopolies and making cures more accessible worldwide.
+
 
 Ethics and Safety: We plan to consult with pharmacologists, ethicists, and regulatory advisors to ensure the platform supports responsible discovery and transparent AI decision-making.
