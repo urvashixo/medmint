@@ -1,6 +1,6 @@
 ## The Story Behind MedMint
 
-### Note- Setup research suite separately, and run it separately!!! use its endpoints in the research directory of this folder
+### Note- Setup research suite separately, and run it separately!!! use its endpoints in the research directory of this folder, Steps to run the research separately is in the readme file inside the research directory
 
 ## Inspiration
 
